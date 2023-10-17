@@ -33,7 +33,7 @@ contract Task2 with Deployable {
   
   receive(msg: Refund) {
     // отправить обратно пользователю
-    require(msg.sender == self.admin, "Only admin is allowed to refund."); // msg.sender == self.admin
+    require(msg.sender == self.admin, "Only admin is allowed to refund.");
     send(SendParameters{
       to: msg.sender,
       bounce: true,
@@ -49,7 +49,7 @@ contract Task2 with Deployable {
       bounce: true,
       value: 0,
       body: ProxyMessage{data: sender(), first_ref: msg}.toCell(),
-      mode: SendRemainingBalance + SendIgnoreErrors
+      mode: SendRemainingValue + SendIgnoreErrors
     });
   }
 }
