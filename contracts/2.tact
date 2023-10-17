@@ -49,7 +49,7 @@ contract Task2 with Deployable {
       bounce: true,
       value: 0,
       body: ProxyMessage{data: sender(), first_ref: msg}.toCell(),
-      mode: SendRemainingValue + SendIgnoreErrors
+      mode: SendRemainingBalance + SendIgnoreErrors
     });
   }
 }
