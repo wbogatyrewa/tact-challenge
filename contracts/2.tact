@@ -13,6 +13,12 @@ import "@stdlib/deploy";
   In refund transaction, it is important to have a check that the refund message came from the admin address
 */
 
+struct ProxyMessage{
+  // queryId: Int as uint64;
+  data: Address;
+  first_ref: Slice;
+}
+
 message(0x44) Refund {
   queryId: Int as uint64;
   sender: Address;
@@ -21,13 +27,29 @@ message(0x44) Refund {
 contract Task2 with Deployable {
   admin: Address;
 
-  init(admin: Address) {
+  init(admin: Address) { 
     self.admin = admin;
   }
   
   receive(msg: Refund) {
+    // отправить обратно пользователю
+    require(msg.sender == self.admin, "Only admin is allowed to refund."); // msg.sender == self.admin
+    send(SendParameters{
+      to: msg.sender,
+      bounce: true,
+      value: 0,
+      mode: SendRemainingBalance + SendIgnoreErrors
+    });
   }
 
   receive(msg: Slice) {
+    // отправить админу сообщение
+    send(SendParameters{
+      to: self.admin,
+      bounce: true,
+      value: 0,
+      body: ProxyMessage{data: sender(), first_ref: msg}.toCell(),
+      mode: SendRemainingBalance + SendIgnoreErrors
+    });
   }
 }
