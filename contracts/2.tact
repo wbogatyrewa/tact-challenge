@@ -13,7 +13,7 @@ import "@stdlib/deploy";
   In refund transaction, it is important to have a check that the refund message came from the admin address
 */
 
-message ProxyMessage{
+struct ProxyMessage{
   data: Address;
   first_ref: Slice;
 }
