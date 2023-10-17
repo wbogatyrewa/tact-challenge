@@ -33,7 +33,7 @@ contract Task2 with Deployable {
   
   receive(msg: Refund) {
     // отправить обратно пользователю
-    require(msg.sender == self.admin, "Only admin is allowed to refund.");
+    require(sender() == self.admin, "Only admin is allowed to refund.");
     send(SendParameters{
       to: msg.sender,
       bounce: true,
