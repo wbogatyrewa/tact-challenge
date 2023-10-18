@@ -105,7 +105,7 @@ contract Task3 with Deployable {
             responseDestination: myAddress(),
             customPayload: null,
             forwardTonAmount: ton("0.01"),
-            forwardPayload: emptySlice()
+            forwardPayload: msg.forwardPayload
           }.toCell());
         }
       } else if (self.jettonAddressB == context().sender) {
@@ -132,7 +132,7 @@ contract Task3 with Deployable {
             responseDestination: myAddress(),
             customPayload: null,
             forwardTonAmount: ton("0.01"),
-            forwardPayload: emptySlice()
+            forwardPayload: msg.forwardPayload
           }.toCell());
         }
       }
