@@ -92,7 +92,7 @@ contract Task3 with Deployable {
             responseDestination: myAddress(),
             customPayload: null,
             forwardTonAmount: ton("0.01"),
-            forwardPayload: emptySlice()
+            forwardPayload: msg.forwardPayload
           }.toCell());
 
           self.bAmount = self.bAmount - swapB;
@@ -119,7 +119,7 @@ contract Task3 with Deployable {
             responseDestination: myAddress(),
             customPayload: null,
             forwardTonAmount: ton("0.01"),
-            forwardPayload: emptySlice()
+            forwardPayload: msg.forwardPayload
           }.toCell());
 
           self.aAmount = self.aAmount - swapA;
