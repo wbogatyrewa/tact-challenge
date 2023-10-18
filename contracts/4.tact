@@ -76,13 +76,12 @@ contract Task4 with Deployable {
 
     self.prevOwner = msg.prevOwner;
     self.lockTime = msg.forwardPayload.loadUint(32);
+    self.nftAddress = context().sender;
   }
 
   receive(msg: NftWithdrawal) {
     require(context().sender == self.prevOwner, "Invalid sender");
     require(now() > self.lockTime, "NFT is still locked");
-
-    self.nftAddress = msg.nftAddress;
 
     send(SendParameters{
       to: self.prevOwner, 
@@ -98,6 +97,10 @@ contract Task4 with Deployable {
       }.toCell(),
       mode: SendRemainingValue + SendIgnoreErrors
     });
+
+    self.prevOwner = newAddress(0, 0);
+    self.lockTime = 0;
+    self.nftAddress = newAddress(0, 0);
   }
 
   get fun time(): Int {
