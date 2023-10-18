@@ -61,32 +61,33 @@ contract Task4 with Deployable {
 
   receive(msg: OwnershipAssigned) {
     if (self.nftAddress != null) {
-      self.reply(msg.toCell()); //  return the incoming nft back to the sender
+      self.reply(msg.toCell()); //  return the incoming nft back to the sender // or Transfer{}
       return;
     }
 
-    self.nftAddress = msg.nftAddress;
-    self.lockTime = msg.forwardPayload; // вытащить из forwardPayload время в uint32
     self.prevOwner = msg.prevOwner;
+    self.lockTime = msg.forwardPayload.loadUint(32);
+    self.nftAddress = context().sender;
+
   }
 
   receive(msg: NftWithdrawal) {
-    require(sender() == prevOwner, "Invalid sender");
-    require(now() > lockTime, "NFT is still locked");
+    require(context().sender == self.prevOwner, "Invalid sender");
+    require(now() > self.lockTime, "NFT is still locked");
 
     send(SendParameters{
       to: self.prevOwner,
       bounce: true,
       value: 0,
       body: Transfer{
-        queryId: 0,
+        queryId: msg.queryId,
         newOwner: self.prevOwner,
         responseDestination: self.prevOwner,
         customPayload: emptyCell(),
         forwardAmount: 0,
         forwardPayload: emptySlice()
       }.toCell(),
-      mode: SendRemainingBalance + SendIgnoreErrors
+      mode: SendRemainingValue + SendIgnoreErrors
     });
   }
 
