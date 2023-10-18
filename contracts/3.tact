@@ -72,8 +72,12 @@ contract Task3 with Deployable {
       // admin add
       if (self.jettonAddressA == context().sender) {
         self.aAmount = self.aAmount + msg.amount;
-      } else {
+      }
+      else if (self.jettonAddressB == context().sender) {
         self.bAmount = self.bAmount + msg.amount;
+      }
+      else {
+        throw(123);
       }
     } else {
       // swap
@@ -104,7 +108,7 @@ contract Task3 with Deployable {
             forwardPayload: emptySlice()
           }.toCell());
         }
-      } else {
+      } else if (self.jettonAddressB == context().sender) {
         let priceA: Int = self.price(self.jettonAddressA);
         let swapA: Int = msg.amount * priceA;
         if (priceA != 0 && swapA <= self.aAmount) {
@@ -131,6 +135,9 @@ contract Task3 with Deployable {
             forwardPayload: emptySlice()
           }.toCell());
         }
+      }
+      else {
+        throw(123);
       }
     }
   } 
