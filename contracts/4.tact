@@ -60,20 +60,21 @@ contract Task4 with Deployable {
 
   receive(msg: OwnershipAssigned) {
     if (self.nftAddress != null) {
-      self.reply(Transfer{
-        queryId: msg.queryId,
-        newOwner: msg.prevOwner,
-        responseDestination: msg.prevOwner,
-        customPayload: emptyCell(),
-        forwardAmount: 0,
-        forwardPayload: emptySlice()
-      }.toCell()); //  return the incoming nft back to the sender // msg.toCell() or Transfer{}
+      self.reply(msg.toCell()); //  return the incoming nft back to the sender // msg.toCell() or Transfer{}
+      // Transfer{
+      //   queryId: msg.queryId,
+      //   newOwner: msg.prevOwner,
+      //   responseDestination: msg.prevOwner,
+      //   customPayload: emptyCell(),
+      //   forwardAmount: 0,
+      //   forwardPayload: emptySlice()
+      // }.toCell()
       return;
     }
 
     self.prevOwner = msg.prevOwner;
     self.lockTime = msg.forwardPayload.loadUint(32);
-    self.nftAddress = sender();
+    self.nftAddress = context().sender;
   }
 
   receive(msg: NftWithdrawal) {
