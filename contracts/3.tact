@@ -102,11 +102,7 @@ contract Task3 with Deployable {
           self.bAmount = self.bAmount - swapB;
           self.aAmount = self.aAmount + msg.amount;
         } else {
-          send(SendParameters{
-            to: msg.from,
-            value: 0,
-            mode: SendRemainingBalance + SendIgnoreErrors,
-            body: TokenTransfer{
+          self.reply(TokenTransfer{
               queryId: 0,
               amount: msg.amount,
               destination: msg.from,
@@ -115,7 +111,7 @@ contract Task3 with Deployable {
               forwardTonAmount: ton("0.01"),
               forwardPayload: emptySlice()
             }.toCell()
-          });
+          );
         }
       } else {
         let priceA: Int = self.price(self.jettonAddressA);
@@ -139,11 +135,7 @@ contract Task3 with Deployable {
           self.aAmount = self.aAmount - swapA;
           self.bAmount = self.bAmount + msg.amount;
         } else {
-          send(SendParameters{
-            to: msg.from,
-            value: 0,
-            mode: SendRemainingBalance + SendIgnoreErrors,
-            body: TokenTransfer{
+          self.reply(TokenTransfer{
               queryId: 0,
               amount: msg.amount,
               destination: msg.from,
@@ -152,7 +144,7 @@ contract Task3 with Deployable {
               forwardTonAmount: ton("0.01"),
               forwardPayload: emptySlice()
             }.toCell()
-          });
+          );
         }
       }
     }
