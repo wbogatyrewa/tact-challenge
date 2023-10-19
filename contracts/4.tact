@@ -54,13 +54,13 @@ contract Task4 with Deployable {
   
   init(seed: Int) {
     self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
-    self.prevOwner =  null;
-    self.nftAddress =  null;
+    self.prevOwner =  newAddress(0, 0);
+    self.nftAddress =  newAddress(0, 0);
     self.lockTime = now();
   }
 
   receive(msg: OwnershipAssigned) {
-    if (self.nftAddress != null) {
+    if (self.nftAddress != newAddress(0, 0)) {
       // return the incoming nft back to the sender 
       // msg.toCell() or Transfer{}
       self.reply( 
@@ -100,8 +100,8 @@ contract Task4 with Deployable {
       mode: SendRemainingValue
     });
 
-    self.nftAddress = null;
-    self.prevOwner = null;
+    self.nftAddress = newAddress(0, 0);
+    self.prevOwner = newAddress(0, 0);
     self.lockTime = now();
   }
 
