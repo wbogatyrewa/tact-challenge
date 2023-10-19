@@ -95,7 +95,7 @@ contract Task4 with Deployable {
         forwardAmount: 0,
         forwardPayload: emptySlice()
       }.toCell(),
-      mode: SendRemainingValue + SendIgnoreErrors
+      mode: SendRemainingValue
     });
 
     self.prevOwner = newAddress(0, 0);
