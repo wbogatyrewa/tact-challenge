@@ -142,14 +142,14 @@ contract Task3 with Deployable {
     }
   } 
   
-  get fun price(jetton: Address): Int { 
-    if (jetton == self.jettonAddressA && self.aAmount != 0) {
+  get fun price(jetton: Address): Int {
+    require(self.aAmount != 0, "Amount of jetton A on contract is 0.");
+    require(self.bAmount != 0, "Amount of jetton B on contract is 0."); 
+
+    if (jetton == self.jettonAddressA) {
       return self.bAmount * self.decimal / self.aAmount;
     }
-    if (jetton == self.jettonAddressB && self.bAmount != 0) {
-      return self.aAmount * self.decimal / self.bAmount;
-    }
-    return 0;
+    return self.aAmount * self.decimal / self.bAmount;
   }
   
   get fun balance(jetton: Address): Int { 
