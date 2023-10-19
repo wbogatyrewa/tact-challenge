@@ -68,9 +68,7 @@ contract Task3 with Deployable {
   }
 
   receive(msg: TokenNotification) {
-    require(self.jettonAddressA == context().sender, "");
-    require(self.jettonAddressB == context().sender, "");
-
+    require(self.jettonAddressA == context().sender || self.jettonAddressB == context().sender, "The sender is wrong");
 
     if (self.owner == msg.from) {
       // admin add
