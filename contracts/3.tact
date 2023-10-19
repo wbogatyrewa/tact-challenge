@@ -83,7 +83,7 @@ contract Task3 with Deployable {
       // swap
       if (self.jettonAddressA == context().sender) {
         let priceB: Int = self.price(self.jettonAddressB);
-        let swapB: Int = msg.amount * priceB;
+        let swapB: Int = msg.amount * priceB / decimal;
         if (priceB != 0 && swapB <= self.bAmount) {
           self.reply(TokenTransfer{
             queryId: 0,
@@ -110,7 +110,7 @@ contract Task3 with Deployable {
         }
       } else if (self.jettonAddressB == context().sender) {
         let priceA: Int = self.price(self.jettonAddressA);
-        let swapA: Int = msg.amount * priceA;
+        let swapA: Int = msg.amount * priceA  / decimal;
         if (priceA != 0 && swapA <= self.aAmount) {
           self.reply(TokenTransfer{
             queryId: 0,
