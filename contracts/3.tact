@@ -68,16 +68,17 @@ contract Task3 with Deployable {
   }
 
   receive(msg: TokenNotification) {
+    require(self.jettonAddressA == context().sender, "");
+    require(self.jettonAddressB == context().sender, "");
+
+
     if (self.owner == msg.from) {
       // admin add
       if (self.jettonAddressA == context().sender) {
         self.aAmount = self.aAmount + msg.amount;
       }
-      else if (self.jettonAddressB == context().sender) {
-        self.bAmount = self.bAmount + msg.amount;
-      }
       else {
-        throw(123);
+        self.bAmount = self.bAmount + msg.amount;
       }
     } else {
       // swap
@@ -108,7 +109,7 @@ contract Task3 with Deployable {
             forwardPayload: msg.forwardPayload
           }.toCell());
         }
-      } else if (self.jettonAddressB == context().sender) {
+      } else {
         let priceA: Int = self.price(self.jettonAddressA);
         let swapA: Int = msg.amount * priceA  / self.decimal;
         if (priceA != 0 && swapA <= self.aAmount) {
@@ -135,9 +136,6 @@ contract Task3 with Deployable {
             forwardPayload: msg.forwardPayload
           }.toCell());
         }
-      }
-      else {
-        throw(123);
       }
     }
   } 
