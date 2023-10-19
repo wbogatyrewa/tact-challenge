@@ -62,7 +62,6 @@ contract Task4 with Deployable {
   receive(msg: OwnershipAssigned) {
     if (self.nftAddress != newAddress(0, 0)) {
       // return the incoming nft back to the sender 
-      // msg.toCell() or Transfer{}
       send(SendParameters{
         to: msg.prevOwner,
         bounce: true,
@@ -77,16 +76,6 @@ contract Task4 with Deployable {
           forwardPayload: emptySlice()
         }.toCell()
       });
-      // self.reply( 
-      //   Transfer{
-      //     queryId: msg.queryId,
-      //     newOwner: msg.prevOwner,
-      //     responseDestination: msg.prevOwner,
-      //     customPayload: emptyCell(),
-      //     forwardAmount: 0,
-      //     forwardPayload: emptySlice()
-      //   }.toCell()
-      // );
       return;
     }
 
@@ -128,16 +117,18 @@ contract Task4 with Deployable {
   }
 
   get fun nft(): Address? {
-    if (self.nftAddress != newAddress(0, 0)) {
-      return self.nftAddress;
-    }
-    return null;
+    // if (self.nftAddress != newAddress(0, 0)) {
+    // }
+    // return null;
+    return self.nftAddress;
+
   }
 
   get fun owner(): Address? {
-    if (self.nftAddress != newAddress(0, 0)) {
-      return self.prevOwner;
-    }
-    return null;
+    // if (self.nftAddress != newAddress(0, 0)) {
+    // }
+    // return null;
+    return self.prevOwner;
+
   }
 }
