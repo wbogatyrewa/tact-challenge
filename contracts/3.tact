@@ -95,7 +95,7 @@ contract Task3 with Deployable {
               responseDestination: myAddress(),
               customPayload: null,
               forwardTonAmount: ton("0.01"),
-              forwardPayload: msg.forwardPayload
+              forwardPayload: emptySlice()
             }.toCell()
           });
 
@@ -106,15 +106,15 @@ contract Task3 with Deployable {
             to: msg.from,
             value: 0,
             mode: SendRemainingBalance + SendIgnoreErrors,
-            body: (TokenTransfer{
+            body: TokenTransfer{
               queryId: 0,
               amount: msg.amount,
               destination: msg.from,
               responseDestination: myAddress(),
               customPayload: null,
               forwardTonAmount: ton("0.01"),
-              forwardPayload: msg.forwardPayload
-            }.toCell())
+              forwardPayload: emptySlice()
+            }.toCell()
           });
         }
       } else {
@@ -132,7 +132,7 @@ contract Task3 with Deployable {
               responseDestination: myAddress(),
               customPayload: null,
               forwardTonAmount: ton("0.01"),
-              forwardPayload: msg.forwardPayload
+              forwardPayload: emptySlice()
             }.toCell()
           });
 
@@ -150,7 +150,7 @@ contract Task3 with Deployable {
               responseDestination: myAddress(),
               customPayload: null,
               forwardTonAmount: ton("0.01"),
-              forwardPayload: msg.forwardPayload
+              forwardPayload: emptySlice()
             }.toCell()
           });
         }
