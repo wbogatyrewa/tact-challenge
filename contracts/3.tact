@@ -78,8 +78,8 @@ contract Task3 with Deployable {
   fun jettonSwap(from: Address, amount: Int) {
     send(SendParameters{
       to: from,
-      value: 0,
-      mode: SendRemainingBalance + SendIgnoreErrors,
+      value: ton("0.01"),
+      mode: SendIgnoreErrors,
       body: TokenTransfer{
         queryId: 0,
         amount: amount,
@@ -138,9 +138,6 @@ contract Task3 with Deployable {
   } 
   
   get fun price(jetton: Address): Int {
-    // require(self.aAmount != 0, "Amount of jetton A on contract is 0.");
-    // require(self.bAmount != 0, "Amount of jetton B on contract is 0."); 
-
     if (jetton == self.jettonAddressA && self.aAmount != 0) {
       return self.bAmount * self.decimal / self.aAmount;
     } else if (jetton == self.jettonAddressB && self.bAmount != 0) {
