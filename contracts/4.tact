@@ -63,8 +63,12 @@ contract Task4 with Deployable {
     if (self.nftAddress != newAddress(0, 0)) {
       // return the incoming nft back to the sender 
       // msg.toCell() or Transfer{}
-      self.reply( 
-        Transfer{
+      send(SendParameters{
+        to: msg.prevOwner,
+        bounce: true,
+        value: 0,
+        mode: SendRemainingValue,
+        body: Transfer{
           queryId: msg.queryId,
           newOwner: msg.prevOwner,
           responseDestination: msg.prevOwner,
@@ -72,7 +76,17 @@ contract Task4 with Deployable {
           forwardAmount: 0,
           forwardPayload: emptySlice()
         }.toCell()
-      );
+      });
+      // self.reply( 
+      //   Transfer{
+      //     queryId: msg.queryId,
+      //     newOwner: msg.prevOwner,
+      //     responseDestination: msg.prevOwner,
+      //     customPayload: emptyCell(),
+      //     forwardAmount: 0,
+      //     forwardPayload: emptySlice()
+      //   }.toCell()
+      // );
       return;
     }
 
