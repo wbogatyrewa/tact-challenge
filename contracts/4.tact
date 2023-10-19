@@ -54,14 +54,16 @@ contract Task4 with Deployable {
   
   init(seed: Int) {
     self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
-    self.prevOwner =  newAddress(0, 0);
-    self.nftAddress =  newAddress(0, 0);
+    self.prevOwner =  null;
+    self.nftAddress =  null;
     self.lockTime = now();
   }
 
   receive(msg: OwnershipAssigned) {
-    if (self.nftAddress != newAddress(0, 0)) {
-      self.reply( //  return the incoming nft back to the sender // msg.toCell() or Transfer{}
+    if (self.nftAddress != null) {
+      // return the incoming nft back to the sender 
+      // msg.toCell() or Transfer{}
+      self.reply( 
         Transfer{
           queryId: msg.queryId,
           newOwner: msg.prevOwner,
@@ -74,14 +76,14 @@ contract Task4 with Deployable {
       return;
     }
 
+    self.nftAddress = context().sender;
     self.prevOwner = msg.prevOwner;
     self.lockTime = now() + msg.forwardPayload.loadUint(32);
-    self.nftAddress = context().sender;
   }
 
   receive(msg: NftWithdrawal) {
     require(context().sender == self.prevOwner, "Invalid sender");
-    require(now() > self.lockTime, "NFT is still locked");
+    require(self.time() > 0, "NFT is still locked");
 
     send(SendParameters{
       to: self.prevOwner, 
@@ -98,9 +100,9 @@ contract Task4 with Deployable {
       mode: SendRemainingValue
     });
 
-    self.prevOwner = newAddress(0, 0);
+    self.nftAddress = null;
+    self.prevOwner = null;
     self.lockTime = now();
-    self.nftAddress = newAddress(0, 0);
   }
 
   get fun time(): Int {
