@@ -75,7 +75,7 @@ contract Task4 with Deployable {
     }
 
     self.prevOwner = msg.prevOwner;
-    self.lockTime = msg.forwardPayload.loadUint(32);
+    self.lockTime = now() + msg.forwardPayload.loadUint(32);
     self.nftAddress = context().sender;
   }
 
@@ -99,12 +99,16 @@ contract Task4 with Deployable {
     });
 
     self.prevOwner = newAddress(0, 0);
-    self.lockTime = 0;
+    self.lockTime = now();
     self.nftAddress = newAddress(0, 0);
   }
 
   get fun time(): Int {
-    return self.lockTime - now();
+    let rest: Int = self.lockTime - now();
+    if (rest > 0) {
+      return rest;
+    }
+    return 0;
   }
 
   get fun nft(): Address? {
