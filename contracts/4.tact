@@ -48,22 +48,20 @@ message NftWithdrawal {
 
 contract Task4 with Deployable {
   seed: Int as uint128;
-  prevOwner: Address;
   lockTime: Int as uint32;
-  nftAddress: Address;
+  prevOwner?: Address;
+  nftAddress?: Address;
   
   init(seed: Int) {
     self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
-    self.prevOwner =  newAddress(0, 0);
-    self.nftAddress =  newAddress(0, 0);
     self.lockTime = now();
   }
 
   receive(msg: OwnershipAssigned) {
-    if (self.nftAddress != newAddress(0, 0)) {
+    if (self.nftAddress != null) {
       // return the incoming nft back to the sender 
       send(SendParameters{
-        to: msg.prevOwner,
+        to: context().sender,
         bounce: true,
         value: 0,
         mode: SendRemainingValue,
@@ -79,17 +77,21 @@ contract Task4 with Deployable {
       return;
     }
 
+    self.lockTime = now() + msg.forwardPayload.loadUint(32);
     self.nftAddress = context().sender;
     self.prevOwner = msg.prevOwner;
-    self.lockTime = now() + msg.forwardPayload.loadUint(32);
   }
 
   receive(msg: NftWithdrawal) {
     require(context().sender == self.prevOwner, "Invalid sender");
-    require(self.time() > 0, "NFT is still locked");
+
+    if (now() < self.lockTime) {
+      self.reply("NFT is still locked".asComment());
+      return;
+    }
 
     send(SendParameters{
-      to: self.prevOwner, 
+      to: self.nftAddress, 
       bounce: true,
       value: 0,
       body: Transfer{
@@ -103,9 +105,9 @@ contract Task4 with Deployable {
       mode: SendRemainingValue
     });
 
-    self.nftAddress = newAddress(0, 0);
-    self.prevOwner = newAddress(0, 0);
     self.lockTime = now();
+    self.nftAddress = null;
+    self.prevOwner = null;
   }
 
   get fun time(): Int {
@@ -117,17 +119,11 @@ contract Task4 with Deployable {
   }
 
   get fun nft(): Address? {
-    // if (self.nftAddress != newAddress(0, 0)) {
-    // }
-    // return null;
     return self.nftAddress;
 
   }
 
   get fun owner(): Address? {
-    // if (self.nftAddress != newAddress(0, 0)) {
-    // }
-    // return null;
     return self.prevOwner;
 
   }
